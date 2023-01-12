@@ -37,6 +37,11 @@ def upsert_product(product):
         "INSERT INTO products(sku, attributes) VALUES(?, ?) ON CONFLICT(sku) DO UPDATE SET attributes=?",
         (product['sku'], attributes_j, attributes_j))
 
+def get_product(sku):
+    row = db_execute(True, "SELECT attributes FROM products WHERE sku=?", (sku,))
+    if row:
+        return {"sku": sku, "attributes": json.loads(row[0][0]) if row[0][0] else {}} 
+
 def get_products():
     products = [
         {"sku": sku, "attributes": json.loads(attributes_j) if attributes_j else {}} 

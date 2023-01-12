@@ -1,6 +1,6 @@
 import unittest
 import sqlite3
-from db import init, upsert_product, get_products, set_products
+from db import init, upsert_product, get_product, get_products, set_products
 
 class DbTests(unittest.TestCase):
     
@@ -15,7 +15,7 @@ class DbTests(unittest.TestCase):
 
     def test_upsert_product(self):
 
-        preexisting_abc = next(filter(lambda p: p["sku"]=="abc", get_products()), None)
+        preexisting_abc = get_product("abc")
         self.assertIsNone(preexisting_abc)
 
         abc = {
@@ -28,7 +28,7 @@ class DbTests(unittest.TestCase):
         }
         upsert_product(abc)
 
-        inserted_abc = next(filter(lambda p: p["sku"]=="abc", get_products()), None)
+        inserted_abc = get_product("abc")
         self.assertIsNotNone(inserted_abc)
         self.assertDictEqual(inserted_abc["attributes"], abc["attributes"])
 
@@ -36,7 +36,7 @@ class DbTests(unittest.TestCase):
 
         upsert_product(abc)
 
-        updated_abc = next(filter(lambda p: p["sku"]=="abc", get_products()), None)
+        updated_abc = get_product("abc")
         self.assertIsNotNone(updated_abc)
         self.assertEqual(updated_abc["attributes"]["grams"], "101")
 
