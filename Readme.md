@@ -10,7 +10,7 @@ $ pip install -r requirements.txt
 
 ```
 $ . .venv/bin/activate
-$ flask run
+$ python app.py
 ```
 
 # Test

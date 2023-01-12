@@ -1,8 +1,11 @@
 import unittest
 import urllib.request
-from app import hello_world
+from app import hello_world, init_db
 
 class UnitTests(unittest.TestCase):
+    
+    def setUp(self):
+        init_db(":memory:")
 
     def test_hello(self):
         d = hello_world()
