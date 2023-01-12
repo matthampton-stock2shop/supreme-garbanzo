@@ -1,7 +1,8 @@
 import unittest
 import urllib.request
 import sqlite3
-from app import hello_world, init_db, upsert_product
+from app import hello_world, init_db, upsert_product, get_products
+
 
 
 class UnitTests(unittest.TestCase):
@@ -28,6 +29,15 @@ class UnitTests(unittest.TestCase):
             "foo": "bar"
             }
         )
+
+        product = next(filter(lambda p: p["sku"]=="abc", get_products()), None)
+        self.assertIsNotNone(product)
+        self.assertDictEqual(product["attributes"], {
+            "size": "small",
+            "grams": "100",
+            "foo": "bar"
+            })
+
 
         upsert_product(
             "abc",
