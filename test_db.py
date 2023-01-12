@@ -1,16 +1,13 @@
 import unittest
-import urllib.request
 import sqlite3
-from db import hello_world, init_db, upsert_product, get_products, set_products
+from db import init, upsert_product, get_products, set_products
 
-
-
-class UnitTests(unittest.TestCase):
+class DbTests(unittest.TestCase):
     
     @classmethod
     def setUpClass(cls):
         cls.conn = sqlite3.connect("file::memory:?cache=shared", uri=True)
-        init_db("file::memory:?cache=shared")
+        init("file::memory:?cache=shared")
 
     @classmethod
     def tearDownClass(cls):     
@@ -71,15 +68,6 @@ class UnitTests(unittest.TestCase):
         self.assertDictEqual(new_products[0]['attributes'], products[0]['attributes'])
         self.assertEqual(new_products[1]['sku'], products[1]['sku'])
         self.assertDictEqual(new_products[1]['attributes'], products[1]['attributes'])
-
-
-class IntegrationTests(unittest.TestCase):
-
-    def test_post_and_then_get(self):
-        with urllib.request.urlopen('http://127.0.0.1:5000') as f:
-            d = f.read().decode('utf-8')
-        self.assertEqual(d, "<p>Hello, World!</p>")
-
 
 if __name__ == '__main__':
     unittest.main()

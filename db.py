@@ -1,20 +1,12 @@
-from flask import Flask
 import sqlite3
-import os
 import threading
 import json
 from contextlib import contextmanager
 
-app = Flask(__name__)
-
-@app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
-
 _db = None
 _lock = threading.RLock()
 
-def init_db(dbname):
+def init(dbname):
     global _db
     if _db is not None:
         raise ValueError("DB already initialised")
@@ -58,9 +50,3 @@ def set_products(products):
         cur.execute("DELETE FROM products")
         if rows:
             cur.executemany("INSERT INTO products(sku, attributes) VALUES(?, ?)", rows)
-
-
-
-if __name__ == '__main__':
-    init_db(os.path.join(os.path.dirname(__file__), "data", "db.sqlite"))
-    app.run()
