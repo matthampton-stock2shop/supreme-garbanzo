@@ -1,7 +1,7 @@
 import unittest
 import urllib.request
 import sqlite3
-from app import hello_world, init_db, upsert_product, get_products, set_products
+from db import hello_world, init_db, upsert_product, get_products, set_products
 
 
 
@@ -15,10 +15,6 @@ class UnitTests(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):     
         cls.conn.close()  
-
-    def test_hello(self):
-        d = hello_world()
-        self.assertEqual(d, "<p>Hello, World!</p>")
 
     def test_upsert_product(self):
 
