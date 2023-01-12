@@ -1,5 +1,12 @@
 import unittest
 import urllib.request
+from app import hello_world
+
+class UnitTests(unittest.TestCase):
+
+    def test_hello(self):
+        d = hello_world()
+        self.assertEqual(d, "<p>Hello, World!</p>")
 
 class IntegrationTests(unittest.TestCase):
 
