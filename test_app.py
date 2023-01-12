@@ -1,15 +1,42 @@
 import unittest
 import urllib.request
-from app import hello_world, init_db
+import sqlite3
+from app import hello_world, init_db, upsert_product
+
 
 class UnitTests(unittest.TestCase):
     
-    def setUp(self):
-        init_db(":memory:")
+    @classmethod
+    def setUpClass(cls):
+        cls.conn = sqlite3.connect("file::memory:?cache=shared", uri=True)
+        init_db("file::memory:?cache=shared")
+
+    @classmethod
+    def tearDownClass(cls):     
+        cls.conn.close()  
 
     def test_hello(self):
         d = hello_world()
         self.assertEqual(d, "<p>Hello, World!</p>")
+
+    def test_upsert_product(self):
+        upsert_product(
+            "abc",
+            {
+            "size": "small",
+            "grams": "100",
+            "foo": "bar"
+            }
+        )
+
+        upsert_product(
+            "abc",
+            {
+            "size": "small",
+            "grams": "101",
+            "foo": "bar"
+            }
+        )
 
 class IntegrationTests(unittest.TestCase):
 
