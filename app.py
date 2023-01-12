@@ -8,13 +8,11 @@ app = Flask(__name__)
 def post_products():
     products = request.json
     db.set_products(products)
-    return products
+    return {"ok": True}
 
 @app.get("/products")
 def get_products():
-    products = request.json
-    db.get_products(products)
-    return products
+    return db.get_products()
 
 if __name__ == '__main__':
     db.init(os.path.join(os.path.dirname(__file__), "data", "db.sqlite"))
