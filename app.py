@@ -3,6 +3,7 @@ import sqlite3
 import os
 import threading
 import json
+from contextlib import contextmanager
 
 app = Flask(__name__)
 
@@ -21,19 +22,22 @@ def init_db(dbname):
 
     db_execute(False, "CREATE TABLE IF NOT EXISTS products(sku TEXT NOT NULL PRIMARY KEY, attributes TEXT)")
 
-def db_execute(is_query, sql, *args):
-    rows = None
+@contextmanager
+def transaction():
     with _lock:
         con = sqlite3.connect(_db, uri=True)
         try:
             cur = con.cursor()
-            res = cur.execute(sql, *args)
-            if is_query:
-                rows = res.fetchall()
+            yield cur
             con.commit()
         finally:
             con.close()
-    return rows
+
+def db_execute(is_query, sql, *args):
+    with transaction() as cur:
+        res = cur.execute(sql, *args)
+        if is_query:
+            return res.fetchall()
 
 def upsert_product(product):
     attributes_j = json.dumps(product.get('attributes') or {})
@@ -47,6 +51,13 @@ def get_products():
         for sku, attributes_j in db_execute(True, "SELECT sku, attributes FROM products")
     ]
     return products
+
+def set_products(products):
+    rows = [(product['sku'], json.dumps(product.get('attributes') or {})) for product in products]
+    with transaction() as cur:
+        cur.execute("DELETE FROM products")
+        if rows:
+            cur.executemany("INSERT INTO products(sku, attributes) VALUES(?, ?)", rows)
 
 
 
