@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, abort
 import os
 import db
 
@@ -13,6 +13,21 @@ def post_products():
 @app.get("/products")
 def get_products():
     return db.get_products()
+
+@app.post("/products/<string:sku>")
+def post_product(sku):
+    product = request.json
+    product['sku'] = sku
+    db.upsert_product(product)
+    return {"ok": True}
+
+@app.get("/products/<string:sku>")
+def get_product(sku):
+    product = db.get_product(sku)
+    if not product:
+        abort(404)
+    return product
+
 
 if __name__ == '__main__':
     db.init(os.path.join(os.path.dirname(__file__), "data", "db.sqlite"))

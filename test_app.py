@@ -37,6 +37,22 @@ class AppIntegrationTests(unittest.TestCase):
         self.assertEqual(new_products[1]['sku'], products[1]['sku'])
         self.assertDictEqual(new_products[1]['attributes'], products[1]['attributes'])        
 
+    def test_set_product_get_product(self):        
+        abc = {
+            "sku": "abc",
+            "attributes": {
+                "size": "small",
+                "grams": "100",
+                "foo": "bar"
+            },
+        }
+        with urllib.request.urlopen(urllib.request.Request('http://127.0.0.1:5000/products/abc', json.dumps(abc).encode("utf-8"), {'Content-Type': 'application/json'})) as f:
+            r = json.load(f)
+        self.assertDictEqual(r,  {"ok": True})
+
+        with urllib.request.urlopen('http://127.0.0.1:5000/products/abc') as f:
+            product = json.load(f)
+        self.assertDictEqual(product["attributes"], abc["attributes"])
 
 if __name__ == '__main__':
     unittest.main()
