@@ -35,11 +35,11 @@ def db_execute(is_query, sql, *args):
             con.close()
     return rows
 
-def upsert_product(sku, attributes):
-    attributes_j = json.dumps(attributes)
+def upsert_product(product):
+    attributes_j = json.dumps(product.get('attributes') or {})
     db_execute(False,
         "INSERT INTO products(sku, attributes) VALUES(?, ?) ON CONFLICT(sku) DO UPDATE SET attributes=?",
-        (sku, attributes_j, attributes_j))
+        (product['sku'], attributes_j, attributes_j))
 
 def get_products():
     products = [

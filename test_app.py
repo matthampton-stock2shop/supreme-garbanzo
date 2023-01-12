@@ -21,32 +21,31 @@ class UnitTests(unittest.TestCase):
         self.assertEqual(d, "<p>Hello, World!</p>")
 
     def test_upsert_product(self):
-        upsert_product(
-            "abc",
-            {
-            "size": "small",
-            "grams": "100",
-            "foo": "bar"
-            }
-        )
 
-        product = next(filter(lambda p: p["sku"]=="abc", get_products()), None)
-        self.assertIsNotNone(product)
-        self.assertDictEqual(product["attributes"], {
-            "size": "small",
-            "grams": "100",
-            "foo": "bar"
-            })
+        preexisting_abc = next(filter(lambda p: p["sku"]=="abc", get_products()), None)
+        self.assertIsNone(preexisting_abc)
 
+        abc = {
+            "sku": "abc",
+            "attributes": {
+                "size": "small",
+                "grams": "100",
+                "foo": "bar"
+            },
+        }
+        upsert_product(abc)
 
-        upsert_product(
-            "abc",
-            {
-            "size": "small",
-            "grams": "101",
-            "foo": "bar"
-            }
-        )
+        inserted_abc = next(filter(lambda p: p["sku"]=="abc", get_products()), None)
+        self.assertIsNotNone(inserted_abc)
+        self.assertDictEqual(inserted_abc["attributes"], abc["attributes"])
+
+        abc["attributes"]["grams"] = "101"
+
+        upsert_product(abc)
+
+        updated_abc = next(filter(lambda p: p["sku"]=="abc", get_products()), None)
+        self.assertIsNotNone(updated_abc)
+        self.assertEqual(updated_abc["attributes"]["grams"], "101")
 
 class IntegrationTests(unittest.TestCase):
 
