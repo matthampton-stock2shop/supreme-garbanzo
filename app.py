@@ -4,6 +4,10 @@ import db
 
 app = Flask(__name__)
 
+@app.errorhandler(db.ValidationError)
+def handle_validation_error(e):
+    return {"ok": False}, 400
+
 @app.post("/products")
 def post_products():
     products = request.json

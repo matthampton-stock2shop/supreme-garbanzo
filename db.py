@@ -6,6 +6,9 @@ from contextlib import contextmanager
 _db = None
 _lock = threading.RLock()
 
+class ValidationError(Exception):
+    pass
+
 def init(dbname):
     global _db
     if _db is not None:
@@ -31,7 +34,17 @@ def db_execute(is_query, sql, *args):
         if is_query:
             return res.fetchall()
 
+def validate_product(product):
+    if not set(product.keys()).issubset({"sku", "attributes"}):
+        raise ValidationError("Invalid properties")
+    if not isinstance(product.get("sku"), str):
+        raise ValidationError("Invalid or missing sku")
+    if "attributes" in product and not isinstance(product.get("attributes"), dict):
+        raise ValidationError("Invalid attributes")
+    return product
+
 def upsert_product(product):
+    validate_product(product)
     attributes_j = json.dumps(product.get('attributes') or {})
     db_execute(False,
         "INSERT INTO products(sku, attributes) VALUES(?, ?) ON CONFLICT(sku) DO UPDATE SET attributes=?",
@@ -50,7 +63,7 @@ def get_products():
     return products
 
 def set_products(products):
-    rows = [(product['sku'], json.dumps(product.get('attributes') or {})) for product in products]
+    rows = [(product['sku'], json.dumps(validate_product(product).get('attributes') or {})) for product in products]
     with transaction() as cur:
         cur.execute("DELETE FROM products")
         if rows:

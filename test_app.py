@@ -1,4 +1,5 @@
 import unittest
+from urllib.error import HTTPError
 import urllib.request
 import json
 
@@ -53,6 +54,22 @@ class AppIntegrationTests(unittest.TestCase):
         with urllib.request.urlopen('http://127.0.0.1:5000/products/abc') as f:
             product = json.load(f)
         self.assertDictEqual(product["attributes"], abc["attributes"])
+
+    def test_invalid_product_fails(self):        
+        junk = {
+            "sku": "junk",
+            "junk": "in here",
+            "attributes": {
+                "size": "small",
+                "grams": "100",
+                "foo": "bar"
+            },
+        }
+        def try_post_it():
+            with urllib.request.urlopen(urllib.request.Request('http://127.0.0.1:5000/products/junk', json.dumps(junk).encode("utf-8"), {'Content-Type': 'application/json'})) as f:
+                json.load(f)
+        self.assertRaises(HTTPError, try_post_it)
+
 
 if __name__ == '__main__':
     unittest.main()

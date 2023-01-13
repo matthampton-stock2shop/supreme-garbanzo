@@ -1,6 +1,6 @@
 import unittest
 import sqlite3
-from db import init, upsert_product, get_product, get_products, set_products
+from db import init, upsert_product, get_product, get_products, set_products, ValidationError
 
 class DbTests(unittest.TestCase):
     
@@ -68,6 +68,39 @@ class DbTests(unittest.TestCase):
         self.assertDictEqual(new_products[0]['attributes'], products[0]['attributes'])
         self.assertEqual(new_products[1]['sku'], products[1]['sku'])
         self.assertDictEqual(new_products[1]['attributes'], products[1]['attributes'])
+
+    def test_upsert_invalid_product1_fails(self):
+
+        abc = {
+            "sku": "abc",
+            "junk": "in here",
+            "attributes": {
+                "size": "small",
+                "grams": "100",
+                "foo": "bar"
+            },
+        }
+        self.assertRaises(ValidationError, upsert_product, abc)
+
+    def test_upsert_invalid_product2_fails(self):
+
+        abc = {
+            "sku_missing": "abc",
+            "attributes": {
+                "size": "small",
+                "grams": "100",
+                "foo": "bar"
+            },
+        }
+        self.assertRaises(ValidationError, upsert_product, abc)
+
+    def test_upsert_invalid_product3_fails(self):
+
+        abc = {
+            "sku": "abc",
+            "attributes": "wrong_type",
+        }
+        self.assertRaises(ValidationError, upsert_product, abc)                
 
 if __name__ == '__main__':
     unittest.main()
