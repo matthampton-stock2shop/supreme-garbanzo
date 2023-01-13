@@ -138,6 +138,59 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "POST /products/junk [fails]",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sku\": \"abc\",\r\n    \"attributes\": \"wrong type\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/products/junk",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"products",
+						"junk"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /products [with junk - fails]",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"sku\": \"abc\",\r\n        \"attributes\": {\r\n            \"size\": \"small\",\r\n            \"grams\": \"100\",\r\n            \"foo\": \"bar\"\r\n        }\r\n    },\r\n    {\r\n        \"sku\": \"abc\",\r\n        \"attributes\": \"wrong type\"\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/products",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
