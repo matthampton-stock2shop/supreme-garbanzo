@@ -9,13 +9,18 @@ $ pip install -r requirements.txt
 # Run
 
 ```
-$ . .venv/bin/activate
 $ python app.py
 ```
+# Unit Tests
 
-# Test
+```
+$ python test_db.py
+```
 
-(while app is running - do this in another tab/window)
+# Integration Tests
 
-$ . .venv/bin/activate
+(while app is running - do this in another tab/window - this will change data, of course)
+
+```
 $ python test_app.py
+```
