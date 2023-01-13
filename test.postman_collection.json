@@ -1,0 +1,170 @@
+{
+	"info": {
+		"_postman_id": "2faebdb6-ff82-4baf-a8d1-00ff98d7cd3c",
+		"name": "Stock2Shop Interview REST API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22709471"
+	},
+	"item": [
+		{
+			"name": "GET /products",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/products",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /products",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"sku\": \"abc\",\r\n        \"attributes\": {\r\n            \"size\": \"small\",\r\n            \"grams\": \"100\",\r\n            \"foo\": \"bar\"\r\n        }\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/products",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /products/abc",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/products/abc",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"products",
+						"abc"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /products/def",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sku\": \"def\",\r\n    \"attributes\": {\r\n        \"size\": \"medium\",\r\n        \"grams\": \"120\",\r\n        \"foo\": \"bag\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/products/def",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"products",
+						"def"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /products/def",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/products/def",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"products",
+						"def"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /products/abc [update]",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sku\": \"abc\",\r\n    \"attributes\": {\r\n        \"size\": \"small\",\r\n        \"grams\": \"122\",\r\n        \"foo\": \"buzz\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/products/abc",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"products",
+						"abc"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": " http://127.0.0.1:5000",
+			"type": "string"
+		}
+	]
+}
