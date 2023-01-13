@@ -1,6 +1,6 @@
 import unittest
 import sqlite3
-from db import init, upsert_product, get_product, get_products, set_products, ValidationError
+from products_db import init, upsert_product, get_product, get_products, set_products, ValidationError
 
 class DbTests(unittest.TestCase):
     
