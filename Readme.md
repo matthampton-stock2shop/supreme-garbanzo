@@ -14,7 +14,7 @@ $ python app.py
 # Unit Tests
 
 ```
-$ python test_db.py
+$ python test_products_db.py
 ```
 
 # Integration Tests
