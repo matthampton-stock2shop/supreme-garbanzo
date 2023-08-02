@@ -32,7 +32,7 @@ class AppIntegrationTests(unittest.TestCase):
         with urllib.request.urlopen('http://127.0.0.1:5000/products') as f:
             products = json.load(f)
         products.sort(key=lambda p: p["sku"])
-        self.assertEquals(len(products), 2)
+        self.assertEqual(len(products), 2)
         self.assertEqual(new_products[0]['sku'], products[0]['sku'])
         self.assertDictEqual(new_products[0]['attributes'], products[0]['attributes'])
         self.assertEqual(new_products[1]['sku'], products[1]['sku'])
