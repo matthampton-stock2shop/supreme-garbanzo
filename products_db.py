@@ -63,7 +63,9 @@ def get_products():
     return products
 
 def set_products(products):
-    rows = [(product['sku'], json.dumps(validate_product(product).get('attributes') or {})) for product in products]
+    rows = []
+    for product in products:
+        rows.append((product['sku'], json.dumps(validate_product(product).get('attributes') or {})))
     with transaction() as cur:
         cur.execute("DELETE FROM products")
         if rows:
