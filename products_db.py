@@ -66,7 +66,7 @@ def set_products(products):
     rows = []
     for product in products:
         rows.append((product['sku'], json.dumps(validate_product(product).get('attributes') or {})))
-    with transaction() as cur:
-        cur.execute("DELETE FROM products")
+    with transaction() as cursor:
+        cursor.execute("DELETE FROM products")
         if rows:
-            cur.executemany("INSERT INTO products(sku, attributes) VALUES(?, ?)", rows)
+            cursor.executemany("INSERT INTO products(sku, attributes) VALUES(?, ?)", rows)
