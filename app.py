@@ -20,7 +20,17 @@ def get_products():
 
 @app.post("/products/<string:sku>")
 def post_product(sku):
-    product = request.json
+    """
+    {
+       "sku": "ABC123",
+       "attributes": {
+           "foo": "bar",
+           "size": "XL"
+       }
+    }
+    """
+
+    product = request.json # <-- JSON.parse(body)  json_decode(body, true)
     product['sku'] = sku
     products_db.upsert_product(product)
     return {"ok": True}
