@@ -18,9 +18,10 @@ def post_products():
 def get_products():
     return products_db.get_products()
 
-@app.post("/products/<string:sku>")
+@app.post("/products/<string:sku>") #https://myurl/products/DEF123
 def post_product(sku):
     """
+    Example body:
     {
        "sku": "ABC123",
        "attributes": {
@@ -33,7 +34,7 @@ def post_product(sku):
     product = request.json # <-- JSON.parse(body)  json_decode(body, true)
     product['sku'] = sku
     products_db.upsert_product(product)
-    return {"ok": True}
+    return {"ok": True} # <-- Flask will json.dumps(...) the response -> so this will return json {"ok": true}
 
 @app.get("/products/<string:sku>")
 def get_product(sku):

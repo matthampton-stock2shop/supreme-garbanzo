@@ -54,7 +54,7 @@ def upsert_product(product):
     }
     """
     validate_product(product)
-    attributes_j = json.dumps(product.get('attributes') or {}) # <-- JSON.stringify(..) / json_encode(product["attributes"])
+    attributes_j = json.dumps(product.get('attributes') or {}) # <-- JSON.stringify(product.attributes||{}) / json_encode(product["attributes"])
     db_execute(False,
         "INSERT INTO products(sku, attributes) VALUES(?, ?) ON CONFLICT(sku) DO UPDATE SET attributes=?",
         (product['sku'], attributes_j, attributes_j))
@@ -74,9 +74,14 @@ def get_products():
 def set_products(products):
     rows = []
     for product in products:
-        rows.append((product['sku'], json.dumps(validate_product(product).get('attributes') or {})))
+        rows.append((product['sku'], json.dumps(validate_product(product).get('attributes') or {}))) # <-- JSON.stringify
     with transaction() as conn:
         conn.execute("DELETE FROM products")
         if rows:
             for row in rows:
                 conn.execute("INSERT INTO products(sku, attributes) VALUES(?, ?)", row)
+
+
+# Request: A, B, C
+# Request: C, D, E
+
