@@ -1,8 +1,10 @@
 from flask import Flask, request, abort
 import os
 import products_db
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 @app.errorhandler(products_db.ValidationError)
 def handle_validation_error(e):
