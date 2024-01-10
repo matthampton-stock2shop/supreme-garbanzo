@@ -1,10 +1,8 @@
 import sqlite3
-import threading
 import json
 from contextlib import contextmanager
 
 _db = None
-_lock = threading.RLock()
 
 class ValidationError(Exception):
     pass
@@ -19,14 +17,13 @@ def init(dbname):
 
 @contextmanager
 def transaction():
-    with _lock:
-        con = sqlite3.connect(_db, uri=True)
-        try:
-            cur = con.cursor()
-            yield cur
-            con.commit()
-        finally:
-            con.close()
+    con = sqlite3.connect(_db, uri=True)
+    try:
+        cur = con.cursor()
+        yield cur
+        con.commit()
+    finally:
+        con.close()
 
 def db_execute(is_query, sql, *args):
     with transaction() as cur:
@@ -77,11 +74,9 @@ def set_products(products):
         rows.append((product['sku'], json.dumps(validate_product(product).get('attributes') or {}))) # <-- JSON.stringify
     with transaction() as conn:
         conn.execute("DELETE FROM products")
-        if rows:
-            for row in rows:
-                conn.execute("INSERT INTO products(sku, attributes) VALUES(?, ?)", row)
+        for row in rows:
+            conn.execute("INSERT INTO products(sku, attributes) VALUES(?, ?)", row)
 
 
 # Request: A, B, C
 # Request: C, D, E
-
