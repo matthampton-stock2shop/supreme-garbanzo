@@ -33,7 +33,7 @@ def db_execute(is_query, sql, *args):
 
 def validate_product(product):
     if not set(product.keys()).issubset({"sku", "attributes"}):
-        raise ValidationError("Invalid properties")
+        raise ValidationError("Invalid properties") # <-- throw new ValidationError("...")
     if not isinstance(product.get("sku"), str):
         raise ValidationError("Invalid or missing sku")
     if "attributes" in product and not isinstance(product.get("attributes"), dict):
