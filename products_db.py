@@ -77,6 +77,22 @@ def set_products(products):
         for row in rows:
             conn.execute("INSERT INTO products(sku, attributes) VALUES(?, ?)", row)
 
-
 # Request: A, B, C
 # Request: C, D, E
+
+
+def upsert_product_alternative(product):
+    """
+    {
+       "sku": "ABC123",
+       "attributes": {
+           "foo": "bar",
+           "size": "XL",
+       }
+    }
+    """
+    validate_product(product)
+    for (name, value) in product['attributes'].items():
+        db_execute(False,
+            "INSERT INTO product_attributes(sku, name, value) VALUES(?, ?, ?) ON CONFLICT(sku, name) DO UPDATE SET value=?",
+            (product['sku'], name, value, value))
